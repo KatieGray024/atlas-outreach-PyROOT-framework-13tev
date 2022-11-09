@@ -94,11 +94,11 @@ The plotting code is located in the **Plotting** folder and contains the followi
 
 Results may be plotted via:
 
-> python3 PlotResults.py Configuration/PlotConf\_AnalysisName.py
+> python3 PlotResults.py Configurations/PlotConf\_AnalysisName.py
 
 In our example case the name of the analysis is *HZZAnalysis*, so type:
 
-> python3 PlotResults.py Configuration/PlotConf\_HZZAnalysis.py
+> python3 PlotResults.py Configurations/PlotConf\_HZZAnalysis.py
 
 The resulting histograms will be put into the _Output_ directory.
 

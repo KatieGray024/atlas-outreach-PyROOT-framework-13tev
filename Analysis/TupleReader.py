@@ -21,7 +21,7 @@ class TupleReader(object):
         self.Tree.SetBranchStatus("*",0)
 
         #EventInfo 
-        #self.eventNumber      = self.activate("i", "eventNumber",            1)
+        self.eventNumber      = self.activate("i", "eventNumber",            1)
         #self.runNumber        = self.activate("i", "runNumber" ,             1)
         self.mcWeight         = self.activate("f", "mcWeight",               1)
         #self.channelNumber    = self.activate("i", "channelNumber",          1)
@@ -38,7 +38,11 @@ class TupleReader(object):
         self.SF_LepTrigger    = self.activate("f", "scaleFactor_LepTRIGGER",    1) 
         self.SF_PhotonTrigger = self.activate("f", "scaleFactor_PhotonTRIGGER", 1)
         #self.XSection         = self.activate("f", "XSection",                  1)
-        #self.SumWeights       = self.activate("f", "SumWeights",                1)
+        self.SumWeights       = self.activate("f", "SumWeights",                1)
+        try:
+            self.pass_selection   = self.activate("f", "pass_selection",            1)
+        except:
+            pass
 
         self.EventInfo = EventInfo(self)
         
@@ -60,12 +64,12 @@ class TupleReader(object):
         #self.Lep_trigMatch  = self.activate("b", "lep_trigMatched",          max_Lep)
         #self.Lep_truthMatch = self.activate("b", "lep_truthMatched",         max_Lep)
         #self.Lep_z0         = self.activate("f", "lep_z0",                   max_Lep)
-        #self.Lep_isTightID  = self.activate("b", "lep_isTightID",            max_Lep)
+        self.Lep_isTightID  = self.activate("b", "lep_isTightID",            max_Lep)
         #self.Lep_pt_syst    = self.activate("f", "lep_pt_syst",              max_Lep)
 
         self.Leptons = [Lepton(i,self) for i in range(0,max_Lep)]
 
-        ''' 
+        
         #JetInfo
         max_Jet = self.GetMaximum("jet_n")
         max_Jet = min(abs(max_Jet), 20)
@@ -143,7 +147,7 @@ class TupleReader(object):
         self.largeRjet_pt_syst       = self.activate("f", "largeRjet_pt_syst",      max_largeRjet)                                                                      
 
         self.largeRjets = [largeRjet(i, self) for i in range(0,max_largeRjet)]
-        '''
+        
 
     def activate(self, vartype,  branchname, maxlength):
         self.Tree.SetBranchStatus(branchname,1)
@@ -265,6 +269,9 @@ class EventInfo(object):
 
     def SumWeights(self):
       return self.Branches.SumWeights[0]
+
+    def PassSelection(self):
+      return self.Branches.pass_selection[0]
 
     def __str__(self):
         return "EventInfo: run: %i  event: %i  eventweight: %4.2f" % (self.runNumber(), self.eventNumber(), self.eventWeight())

@@ -6,8 +6,8 @@ Job = {
     "OutputDirectory" : "resultsHZZ/"
 }
 
-prefix = "https://atlas-opendata.web.cern.ch/atlas-opendata/samples/2020/4lep/" # online
-#prefix = "Input/4lep/" # local if you've downloaded the data
+#prefix = "https://atlas-opendata.web.cern.ch/atlas-opendata/samples/2020/4lep/" # online
+prefix = "Input/4lep/" # local if you've downloaded the data
 
 Processes = {
 
