@@ -11,7 +11,7 @@ OverlayPaintable: used to overlay distributions, e.g. some exotic signal to comp
 import ROOT
 from Plotting import PlotStyle as PS
 from Plotting import Database as DB
-from Plotting import Depiction as DP
+
     
 class Paintable(object):
     """Baseclass for all paintables. The definition data member is a dictionary that holds information 
@@ -72,14 +72,9 @@ class StackPaintable(Paintable):
             contributiondata["hist"] = sumhist
             self.legendData.append((contributiondata["hist"], process, "f"))
             self.stack.Add(sumhist)
+        
             
-         
-        #Adding the fit to the legend
-        contributiondata = self.definition["Processes"][self.definition["Order"][0]]
-        sumhist = self.getContribution(contributiondata)
-        sumhist.SetFillColor(ROOT.TColor.GetColor(contributiondata["Color"]))
-        contributiondata["hist"] = sumhist
-        #GETTING FIT INTO LEGEND
+        #Adding Fit to Legend
         fit = contributiondata["hist"].GetFunction("gaus")
         self.legendData.append((fit, "Fit", "L"))
             

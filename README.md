@@ -210,3 +210,7 @@ If you want to add an analysis, make sure that the filename is the same as the c
 ## Analyses 
 
 Analyses that have been implemented: HZZ
+
+## Fitting 
+
+In the PlotConf file within the Configuration folder, the dictionary "Fits" allows for the specification of a histogram to add a fit to. 

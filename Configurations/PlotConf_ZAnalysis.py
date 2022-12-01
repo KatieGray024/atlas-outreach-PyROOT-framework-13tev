@@ -11,7 +11,7 @@ config = {
 "Histograms" : {
     "etmiss"          : {"rebin" : 1},
     "invMassZ"          : {"rebin" : 1},
-    "lep_n"          : {"rebin" : 1},
+    #"lep_n"          : {"rebin" : 1},
     #"mass_four_lep_ext"       : {},
     #"invMassZ1"       : {"rebin" : 3},
     #"invMassZ2"       : {"rebin" : 3},
@@ -27,14 +27,6 @@ config = {
 
 },
 
-# What Fit is being applied?
-
-"Fits" : {
-    "gauss",
-    "breitwigner",
-    "voigt",
-
-},
 
 
 # Histogram Design
@@ -84,7 +76,21 @@ config = {
         
         "Main": {
             "type"      : "Main",
-            "Paintables": ["Stack", "data"]
+            "Paintables": ["Stack", "data"],
+            
+            #Configure Fit
+            #Parameters not necessary for ROOT pre-defined functions ("fitfunction": gaus, pol2, landau, or expo)
+            
+            "Fits" : {
+                "invMassZ"          : {"fitfunction" : "[0]*(2.0*(2)**(1/2)*[1]*[2]*(([1]**2*([1]**2 + [2]**2))**(1/2))/((3.1415)*([1]**2 + (([1]**2*([1]**2 + [2]**2))**(1/2)))**(1/2)))/((x**2 - [1]**2)**2 + [1]**2*[2]**2)", "range" : [80,100], "parameters" : [1166*100, 9.07*10, 10], "background" : "none"},
+                
+                #"etmiss"          : {"fitfunction" : "gaus", "range" : [80,100], "parameters" : [], "background" : "none"},
+                #"lep_n"          : {"fitfunction" : "gaus", "range" : [80,100], "parameters" : [], "background" : "none"},
+                #"invMassZ2"       : {"fitfunction" : "gaus", "range" : [80,100], "parameters" : [], "background" : "none"},
+
+                
+
+            },
         },
     }
 },

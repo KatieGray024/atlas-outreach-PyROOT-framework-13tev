@@ -8,10 +8,6 @@ Agreement:     similar to ratio but emphasises the region around a ratio of 1, u
 import ROOT
 from Plotting import PlotStyle as PS
 from Plotting import Database as DB
-import numpy as np
-from .. import PlotConf_ZAnalysis as Conf
-
-#from Plotting import Fitting
 
 class Depiction(object):
     """Base class for all other depictions
@@ -38,6 +34,8 @@ class MainDepiction(Depiction):
     The painting order is important as paintables later in the order may mask earlier paintables.
     MainDepiction is sensitive to the following hist_options:
     log_y : shows the contents in logarithmic scale (do histogram : {log_y = True})
+    
+    Optional Fits are created and implemented here
     """
     def __init__(self, configuration, name):
         super(MainDepiction, self).__init__(configuration, name)
@@ -51,55 +49,38 @@ class MainDepiction(Depiction):
         paintablesToPaint[0].getHistogram().SetMaximum(maximum)
         paintablesToPaint[0].getHistogram().SetMinimum(0.1)
         
-        #Selecting Histogram and Fit
+        #What Fits to Implement, Range and Background
 
-        #Fitting a Gaussian Distribution
-       
-        #Hint: Replace "gaus" with "expo" or other predefined functions
-        
-        paintablesToPaint[1].getHistogram().Fit("gaus","","",80,100)
-        #f = paintablesToPaint[1].getHistogram().GetFunction("gaus")
-        #const,mu,sigma = f.GetParameter(0), f.GetParameter(1), f.GetParameter(2)
-        #fwhm = 2*(2*np.log(2))**(1/2)*sigma 
+        for histograms in self.configuration['Fits']:
+            if histograms == paintablesToPaint[0].getHistogram().GetName():
+                xrange = self.configuration['Fits'][histograms]['range']
+                fit = self.configuration['Fits'][histograms]['fitfunction']
+                parameters = self.configuration['Fits'][histograms]['parameters']
+                
+                fitfunction = ROOT.TF1("fitfunction",fit)
+                
+                #Set the initial parameters of the fit funciton
+                for i in range(len(parameters)):
+                    fitfunction.SetParameter(i,parameters[i])
+                 
+                #Draw the Fit
+                paintablesToPaint[1].getHistogram().Fit(fitfunction,"","",xrange[0],xrange[1])
+                
+                #Final Fit Equation
+                for i in range(len(parameters)):
+                    fit = fit.replace("[{0}]".format(i),"{0}".format(round(fitfunction.GetParameter(i),4)))
 
+                    
+                #print(fit)Uncomment to include fit question in printout
+                
+                
         
-        #Fitting a Breit-Wigner Distribution: Make sure to specify good starting parameters!
-   
-       
-        #bwfit = "[0]*(2.0*(2)**(1/2)*[1]*[2]*(([1]**2*([1]**2 + [2]**2))**(1/2))/((3.1415)*([1]**2 + (([1]**2*([1]**2 + [2]**2))**(1/2)))**(1/2)))/((x**2 - [1]**2)**2 + [1]**2*[2]**2)" #Define a function
-        #bw = ROOT.TF1("bw",bwfit)    #Create ROOT object
-        #bw.SetParameter(0, 1166*100) #Set parameters
-        #bw.SetParameter(1, 9.07*10)
-        #bw.SetParameter(2, 10)
-        #paintablesToPaint[1].getHistogram().Fit("bw","","",80,100) #Plot over a particular range
-
-         
-       
-        #Fitting a Voigt Distribution: Make sure to specify good starting parameters!
-        '''
-        gausfit = "[0]*e**(-(x - [1])**2/(2*[2]**2))"
-        gaus = ROOT.TF1("gaus",gausfit)
-        gaus.SetParameter(0 , 1.86*10**3)
-        gaus.SetParameter(1 , 9.07*10)
-        gaus.SetParameter(2 , 3.56)
-        bwfit = "[0]*(2.0*(2)**(1/2)*[1]*[2]*(([1]**2*([1]**2 + [2]**2))**(1/2))/((3.1415)*([1]**2 + (([1]**2*([1]**2 + [2]**2))**(1/2)))**(1/2)))/((x**2 - [1]**2)**2 + [1]**2*[2]**2)"
-        bw = ROOT.TF1("bw",bwfit)
-        bw.SetParameter(0, 1166*100)
-        bw.SetParameter(1, 9.07*10)
-        bw.SetParameter(2, 10)
-        
-        vfit = ROOT.TF1Convolution(gaus,bw,True)
-        voigt = ROOT.TF1("voigt",vfit)
-        paintablesToPaint[1].getHistogram().Fit("voigt")
-        '''
-        
-        #print(paintablesToPaint[0].getHistogram().Integral()) #Integral of MC
-        #print(paintablesToPaint[1].getHistogram().Integral()) #Integral of data
-        
+    
         option = ""
         for paintable in paintablesToPaint:
             paintable.draw(paintable.drawOption + option)
             option = "same"
+        
 
         
         
